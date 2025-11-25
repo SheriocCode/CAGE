@@ -1,2 +1,30 @@
 __pycache__
 .pyc
+# Python 编译产物
+*.so
+*.o
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 构建目录
+models/
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Ninja 构建系统临时文件
+.ninja_deps
+.ninja_log
+build.ninja
+
+# 数据和模型（通常不纳入版本控制）
+checkpoints/
+data/
+s3d_floorplan_eval/montefloor_data/
+pretrained/
+
+# 输出、日志文件
+tblogs/
+output/
