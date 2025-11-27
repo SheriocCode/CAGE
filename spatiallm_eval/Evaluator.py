@@ -128,7 +128,7 @@ class Evaluator_SpatialLM():
 
         return quant_result_dict
 
-    def get_quantitative(self, gt_polys, ignore_mask_region, pred_polys=None, masks_list=None, img_size=(256, 256), dataset_type="s3d"):
+    def get_quantitative(self, gt_polys, ignore_mask_region, pred_polys=None, masks_list=None, img_size=(256, 256), dataset_type="spatiallm"):
         def get_room_metric():
             pred_overlaps = [False] * len(pred_room_map_list)
 
