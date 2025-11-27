@@ -126,7 +126,7 @@ def evaluate(model, criterion, dataset_name, data_loader, device,epoch = None):
             elif dataset_name == 'scenecad':
                 gt_polys = [gt_instances[i].gt_masks.polygons[0][0].reshape(-1,2).astype(np.int)]
                 evaluator = Evaluator_SceneCAD()
-            elif dataset_name == 'spatiallm':
+            elif dataset_name == 'spatiallm' or dataset_name == 'spatiallm_small':
                 gt_polys = []
                 for poly in gt_instances[i].gt_masks.polygons:
                     # 每个poly对应一个房间
@@ -216,7 +216,7 @@ def evaluate(model, criterion, dataset_name, data_loader, device,epoch = None):
                                                             window_door_lines_types=window_doors_types)
             elif dataset_name == 'scenecad':
                 quant_result_dict_scene = evaluator.evaluate_scene(room_polys=room_polys, gt_polys=gt_polys)
-            elif dataset_name == 'spatiallm':
+            elif dataset_name == 'spatiallm' or dataset_name == 'spatiallm_small':
                 quant_result_dict_scene = evaluator.evaluate_scene(room_polys=room_polys, gt_polys=gt_polys)
 
             if 'room_iou' in quant_result_dict_scene:
@@ -324,7 +324,7 @@ def evaluate_floor(model, dataset_name, data_loader, device, output_dir, plot_pr
             elif dataset_name == 'scenecad':
                 gt_polys = [gt_instances[i].gt_masks.polygons[0][0].reshape(-1,2).astype(np.int)]
                 evaluator = Evaluator_SceneCAD()
-            elif dataset_name == 'spatiallm':
+            elif dataset_name == 'spatiallm' or dataset_name == 'spatiallm_small':
                 gt_polys = []
                 for poly in gt_instances[i].gt_masks.polygons:
                     # 每个poly对应一个房间
@@ -428,7 +428,7 @@ def evaluate_floor(model, dataset_name, data_loader, device, output_dir, plot_pr
     
             elif dataset_name == 'scenecad':
                 quant_result_dict_scene = evaluator.evaluate_scene(room_polys=room_polys, gt_polys=gt_polys)
-            elif dataset_name == 'spatiallm':
+            elif dataset_name == 'spatiallm' or dataset_name == 'spatiallm_small':
                 quant_result_dict_scene = evaluator.evaluate_scene(room_polys=room_polys, gt_polys=gt_polys)
 
             if quant_result_dict is None:
