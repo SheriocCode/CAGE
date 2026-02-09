@@ -213,6 +213,7 @@ def main(args):
 
 
     output_dir = Path(args.output_dir)
+    ## =======================resume检查点继续训练========================
     if args.resume:
         checkpoint = torch.load(args.resume, map_location='cpu')
         missing_keys, unexpected_keys = model.load_state_dict(checkpoint['model'], strict=False)
@@ -245,6 +246,13 @@ def main(args):
             model, criterion, args.dataset_name, data_loader_val, device
         )
 
+    # ## ========================基于ckpt进行微调========================
+    # if args.resume:
+    #     checkpoint = torch.load(args.resume, map_location='cpu')
+    #     missing_keys, unexpected_keys = model.load_state_dict(checkpoint['model'], strict=False)
+    #     # 对于微调：只加载模型权重，不加载优化器和调度器状态
+    #     print("Fine-tuning mode: loading model weights only, skipping optimizer and lr_scheduler")
+        
     print("Start training")
     start_time = time.time()
     torch.cuda.empty_cache()
@@ -255,6 +263,8 @@ def main(args):
             model, criterion, data_loader_train, optimizer, device, epoch, args.clip_max_norm,args=args)
         lr_scheduler.step()
         peak = torch.cuda.max_memory_allocated() / 1024**2
+        
+        ## ========================正常训练/resume检查点继续训练========================
         if args.output_dir:
             checkpoint_paths = [output_dir / 'checkpoint.pth']
             # extra checkpoint before LR drop and every 50 epochs
@@ -272,6 +282,25 @@ def main(args):
                     'epoch': epoch,
                     'args': args,
                 }, checkpoint_path)
+  
+        # ## ========================基于ckpt进行微调========================
+        # if args.output_dir:
+        #     checkpoint_paths = [output_dir / 'checkpoint.pth']
+        #     # extra checkpoint before LR drop and every 50 epochs
+        #     # if (epoch + 1) in args.lr_drop or (epoch + 1) % 10 == 0:
+        #     if epoch < 50: # 前50轮每轮保存
+        #         checkpoint_paths.append(output_dir / f'checkpoint{epoch:04}.pth')
+        #     else:
+        #         if (epoch + 1) in args.lr_drop or (epoch + 1) % 10 == 0:
+        #             checkpoint_paths.append(output_dir / f'checkpoint{epoch:04}.pth')
+        #     for checkpoint_path in checkpoint_paths:
+        #         torch.save({
+        #             'model': model.state_dict(),
+        #             'optimizer': optimizer.state_dict(),
+        #             'lr_scheduler': lr_scheduler.state_dict(),
+        #             'epoch': epoch,
+        #             'args': args,
+        #         }, checkpoint_path)
 
         test_stats = evaluate(
             model, criterion, args.dataset_name, data_loader_val, device
