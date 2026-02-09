@@ -1,5 +1,5 @@
 """
-This is a hack implementation for evaluation on SceneCAD
+This is a hack implementation for evaluation on SpatialLM
 
 Mostly copy-paste from Evaluator.py (from MonteFloor) with small modification
 """
@@ -21,7 +21,7 @@ angle_metric_thresh = 5
 
 # colormap_255 = [[i, i, i] for i in range(40)]
 
-class Evaluator_SceneCAD():
+class Evaluator_SpatialLM():
     def __init__(self, data_rw=None, options=None):
         self.data_rw = data_rw
         self.options = options
@@ -115,7 +115,7 @@ class Evaluator_SceneCAD():
         plt.savefig("joint_mask.png", bbox_inches='tight')
         assert False
 
-    def evaluate_scene(self, room_polys, gt_polys, show=False, name="ours", dataset_type="scenecad"):
+    def evaluate_scene(self, room_polys, gt_polys, show=False, name="ours", dataset_type="spatiallm"):
 
         gt_polys_list = [np.concatenate([poly, poly[None, 0]]) for poly in gt_polys]
         room_polys = [np.concatenate([poly, poly[None, 0]]) for poly in room_polys]
@@ -128,7 +128,7 @@ class Evaluator_SceneCAD():
 
         return quant_result_dict
 
-    def get_quantitative(self, gt_polys, ignore_mask_region, pred_polys=None, masks_list=None, img_size=(256, 256), dataset_type="s3d"):
+    def get_quantitative(self, gt_polys, ignore_mask_region, pred_polys=None, masks_list=None, img_size=(256, 256), dataset_type="spatiallm"):
         def get_room_metric():
             pred_overlaps = [False] * len(pred_room_map_list)
 
